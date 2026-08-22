@@ -439,6 +439,7 @@
 </footer>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
   AOS.init({ duration: 700, easing: 'ease-out-quart', once: true });
   lucide.createIcons();
@@ -478,12 +479,13 @@
   counters.forEach(function (c) { counterObserver.observe(c); });
 
   // Validação simples do formulário de contato
-  document.getElementById('leadForm').addEventListener('submit', function (e) {
+  document.getElementById('leadForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     var nome = document.getElementById('nome').value.trim();
     var email = document.getElementById('email').value.trim();
     var perfil = document.getElementById('perfil').value;
     var cidade = document.getElementById('cidade').value.trim();
+    var mensagem = document.getElementById('mensagem').value.trim() || '';
     var errorEl = document.getElementById('formError');
     var successEl = document.getElementById('formSuccess');
     successEl.classList.add('hidden');
@@ -499,6 +501,13 @@
       return;
     }
     errorEl.classList.add('hidden');
+    await axios.post('https://n8n.andrehonorato.com.br/webhook/175d28d7-dc46-4fc1-a026-6454055dbe3a', {
+      nome,
+      email,
+      perfil,
+      cidade,
+      mensagem
+    })
     successEl.classList.remove('hidden');
     this.reset();
   });
