@@ -116,6 +116,30 @@
   .hover-lift {
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
   }
+
+  /* Menu mobile: abre/fecha por altura, e fica invisível quando fechado
+     para não receber foco por teclado. */
+  #mobileMenu {
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.3s ease, visibility 0.3s ease, box-shadow 0.3s ease;
+  }
+  #mobileMenu.open {
+    max-height: 24rem;
+    visibility: visible;
+    /* Mesma sombra do hover dos cards (shadow-lg) */
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+  /* No escuro a sombra não aparece, como nos cards */
+  html.dark #mobileMenu.open { box-shadow: none; }
+
+  /* Check do hero de sucesso: entra com um leve pop ao aparecer */
+  .success-check { animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  @keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 </style>
 </head>
 
@@ -126,48 +150,75 @@
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
     <a href="#topo" class="flex items-center gap-2">
       <img class="w-10" src="./img/logo_foodshare_semfundo.png" alt="Logo do Food Share">
-      <span class="font-display font-bold text-xl text-brand-800 dark:text-[#fafafa]">Food Share</span>
+      <span class="hidden sm:block font-display font-bold text-xl text-brand-800 dark:text-[#fafafa]">Food Share</span>
     </a>
     <nav class="hidden md:flex items-center gap-8 text-sm text-slate-600 dark:text-[#a3a3a3]">
-      <a href="#como-funciona" class="hover:text-brand-600 transition-colors">Como funciona</a>
       <a href="#beneficios" class="hover:text-brand-600 transition-colors">Benefícios</a>
+      <a href="#como-funciona" class="hover:text-brand-600 transition-colors">Como funciona</a>
       <a href="#depoimentos" class="hover:text-brand-600 transition-colors">Depoimentos</a>
       <a href="#faq" class="hover:text-brand-600 transition-colors">Dúvidas</a>
     </nav>
     <div class="flex items-center gap-3">
-      <button id="themeToggle" type="button" aria-label="Alternar tema claro/escuro" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:bg-slate-100 dark:text-[#a3a3a3] dark:hover:bg-[#1a1a1a] transition-colors">
+      <button id="themeToggle" type="button" aria-label="Alternar tema claro/escuro" class="w-9 h-9 rounded-lg hidden sm:flex items-center justify-center text-slate-600 hover:bg-slate-100 dark:text-[#a3a3a3] dark:hover:bg-[#1a1a1a] transition-colors">
         <i data-lucide="sun" class="w-[18px] h-[18px] hidden dark:block"></i>
         <i data-lucide="moon" class="w-[18px] h-[18px] block dark:hidden"></i>
       </button>
-      <a href="#" class="hidden sm:inline text-sm text-slate-600 hover:text-brand-600 transition-colors dark:text-[#a3a3a3]">Entrar</a>
-      <a href="#cadastro" class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]">Cadastre-se</a>
+      <a href="#" class="border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors dark:border-[#ffffff1a] sm:inline text-sm text-slate-600 transition-colors dark:text-[#a3a3a3] dark:hover:bg-[#1a1a1a]">Entrar</a>
+      <a href="#cadastro" class="hidden md:inline-block bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]">Cadastre-se</a>
+      <button id="menuToggle" type="button" aria-label="Abrir menu" aria-controls="mobileMenu" aria-expanded="false"
+        class="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:bg-slate-100 dark:text-[#a3a3a3] dark:hover:bg-[#1a1a1a] transition-colors">
+        <i data-lucide="menu" class="menu-icon-open w-5 h-5"></i>
+        <i data-lucide="x" class="menu-icon-close w-5 h-5 hidden"></i>
+      </button>
     </div>
+  </div>
+
+  <div id="mobileMenu" class="md:hidden bg-white dark:bg-[#0a0a0a]">
+    <nav class="max-w-6xl mx-auto px-6 py-3 flex flex-col text-sm text-slate-600 border-t border-slate-100 dark:border-[#ffffff1a] dark:text-[#a3a3a3]">
+      <a href="#beneficios" class="py-2.5 hover:text-brand-600 transition-colors">Benefícios</a>
+      <a href="#como-funciona" class="py-2.5 hover:text-brand-600 transition-colors">Como funciona</a>
+      <a href="#depoimentos" class="py-2.5 hover:text-brand-600 transition-colors">Depoimentos</a>
+      <a href="#faq" class="py-2.5 hover:text-brand-600 transition-colors">Dúvidas</a>
+
+      <!-- Abaixo de sm o botão de tema sai do cabeçalho e vira esta linha, com rótulo e switch -->
+      <button id="themeToggleMobile" type="button" role="switch" aria-checked="false"
+        class="sm:hidden flex items-center justify-between gap-3 py-2.5">
+        <span class="flex items-center gap-2">
+          Modo escuro
+        </span>
+        <span class="relative w-10 h-6 rounded-full bg-slate-200 transition-colors dark:bg-[#1d4ed8]">
+          <span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform dark:translate-x-4"></span>
+        </span>
+      </button>
+
+      <a href="#cadastro" class="mt-3 mb-1 bg-brand-600 hover:bg-brand-700 text-white text-center font-medium px-4 py-2.5 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]">Cadastre-se</a>
+    </nav>
   </div>
 </header>
 
 <!-- ===================== HERO / PROPOSTA DE VALOR ===================== -->
 <section id="topo" class="relative overflow-hidden bg-gradient-to-br from-brand-600 to-brand-900">
   <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
-    <div data-aos="fade-up">
+    <div class="text-center md:text-left" data-aos="fade-up">
       <span class="inline-block bg-white/10 text-brand-100 text-xs font-medium px-3 py-1 rounded-full mb-5">
         Plataforma gratuita de doação de alimentos
       </span>
       <h1 class="font-display font-extrabold text-4xl md:text-5xl text-white leading-tight mb-5">
         Conectando quem doa a quem precisa
       </h1>
-      <p class="text-brand-100 text-lg leading-relaxed mb-8 max-w-md">
+      <p class="text-brand-100 text-lg leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
         O Food Share une estabelecimentos com excedentes de alimentos a entidades
         beneficiárias que mais precisam, em poucos cliques, sem custo e sem burocracia.
       </p>
-      <div class="flex flex-wrap gap-3 mb-12">
-        <a href="#cadastro" class="bg-white text-brand-800 font-semibold px-6 py-3 rounded-lg hover:bg-brand-50 transition-colors dark:bg-[#fafafa] dark:text-[#0a0a0a] dark:hover:bg-white">
+      <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-12">
+        <a href="#cadastro" class="bg-white text-brand-800 font-semibold px-6 py-3 rounded-lg hover:bg-brand-50 transition-colors dark:bg-[#fafafa] dark:hover:bg-white">
           Cadastre-se gratuitamente
         </a>
         <a href="#como-funciona" class="border border-white/30 text-white font-medium px-6 py-3 rounded-lg hover:bg-white/10 transition-colors dark:border-[#ffffff1a]">
           Ver como funciona
         </a>
       </div>
-      <div class="flex gap-10">
+      <div class="gap-10 justify-center md:justify-start flex">
         <div>
           <p class="font-display font-extrabold text-3xl text-white counter" data-target="500">0</p>
           <p class="text-brand-200 text-xs mt-1">Estabelecimentos</p>
@@ -183,7 +234,7 @@
       </div>
     </div>
 
-    <div class="relative h-72 md:h-96" data-aos="fade-left" data-aos-delay="150" aria-hidden="true">
+    <div class="hidden md:block relative h-72 md:h-96" data-aos="fade-left" data-aos-delay="150" aria-hidden="true">
       <div class="blob-wrap">
         <div class="blob blob-a"></div>
         <div class="blob blob-b"></div>
@@ -372,12 +423,13 @@
   <div class="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl px-8 py-14 text-center dark:border dark:border-[#262626]" data-aos="zoom-in">
     <h2 class="font-display font-bold text-3xl text-white mb-3">Pronto para fazer parte?</h2>
     <p class="text-brand-100 mb-8 max-w-md mx-auto">Cadastre-se gratuitamente e comece a doar ou receber alimentos hoje mesmo.</p>
-    <a href="#cadastro" class="inline-block bg-white text-brand-800 font-semibold px-7 py-3 rounded-lg hover:bg-brand-50 transition-colors dark:bg-[#fafafa] dark:text-[#0a0a0a] dark:hover:bg-white">Criar conta gratuita</a>
+    <a href="#cadastro" class="inline-block bg-white text-brand-800 font-semibold px-7 py-3 rounded-lg hover:bg-brand-50 transition-colors dark:bg-[#fafafa] dark:hover:bg-white">Criar conta gratuita</a>
   </div>
 </section>
 
 <!-- ===================== FORMULÁRIO ===================== -->
 <section id="cadastro" class="max-w-2xl mx-auto px-6 pb-24">
+  <div id="formWrap">
   <div class="text-center mb-10" data-aos="fade-up">
     <h2 class="font-display font-bold text-3xl text-slate-900 mb-3 dark:text-[#fafafa]">Fale com a gente</h2>
     <p class="text-slate-500 dark:text-[#a3a3a3]">Deixe seus dados e entramos em contato para ativar seu cadastro.</p>
@@ -390,8 +442,8 @@
         class="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-[#1a1a1a] dark:border-[#262626] dark:text-[#fafafa] dark:focus:ring-[#1d4ed8]">
     </div>
     <div class="sm:col-span-1">
-      <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5 dark:text-[#fafafa]">E-mail</label>
-      <input id="email" name="email" type="email" placeholder="seu@email.com"
+      <label for="celular" class="block text-sm font-medium text-slate-700 mb-1.5 dark:text-[#fafafa]">Celular</label>
+      <input id="celular" name="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 98765-4321"
         class="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-[#1a1a1a] dark:border-[#262626] dark:text-[#fafafa] dark:focus:ring-[#1d4ed8]">
     </div>
     <div class="sm:col-span-1">
@@ -415,16 +467,25 @@
     </div>
 
     <p id="formError" class="sm:col-span-2 text-sm text-red-600 hidden dark:text-red-400"></p>
-    <p id="formSuccess" class="sm:col-span-2 text-sm text-leaf-700 bg-leaf-50 rounded-lg px-4 py-3 hidden dark:text-emerald-400 dark:bg-[#1a1a1a]">
-      Recebemos seus dados. Nossa equipe entra em contato em breve.
-    </p>
 
     <div class="sm:col-span-2">
-      <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]">
+      <button id="submitBtn" type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]">
         Quero saber mais
       </button>
     </div>
   </form>
+  </div>
+
+  <!-- Substitui o formulário depois do envio, o que também impede reenvios -->
+  <div id="successHero" class="hidden text-center bg-slate-50 rounded-3xl px-8 py-16 dark:bg-[#1a1a1a] dark:border dark:border-[#262626]">
+    <div class="success-check w-20 h-20 mx-auto mb-6 rounded-full bg-leaf-50 text-leaf-600 flex items-center justify-center dark:bg-[#14301a] dark:text-emerald-400">
+      <i data-lucide="check" class="w-10 h-10"></i>
+    </div>
+    <h2 class="font-display font-bold text-3xl text-slate-900 mb-3 dark:text-[#fafafa]">Recebemos seus dados!</h2>
+    <p class="text-slate-500 max-w-sm mx-auto dark:text-[#a3a3a3]">
+      Nossa equipe entra em contato pelo celular informado em breve. Obrigado por fazer parte do Food Share.
+    </p>
+  </div>
 </section>
 
 <!-- ===================== RODAPÉ ===================== -->
@@ -444,11 +505,55 @@
   AOS.init({ duration: 700, easing: 'ease-out-quart', once: true });
   lucide.createIcons();
 
-  // Alternância manual de tema, com preferência salva
-  document.getElementById('themeToggle').addEventListener('click', function () {
-    var root = document.documentElement;
-    var isDark = root.classList.toggle('dark');
+  // Alternância manual de tema, com preferência salva.
+  // Dois gatilhos: o botão do cabeçalho (sm+) e a linha dentro do menu hamburger (abaixo de sm).
+  var themeToggleMobile = document.getElementById('themeToggleMobile');
+
+  function setTheme(isDark) {
+    document.documentElement.classList.toggle('dark', isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggleMobile.setAttribute('aria-checked', isDark ? 'true' : 'false');
+  }
+
+  [document.getElementById('themeToggle'), themeToggleMobile].forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setTheme(!document.documentElement.classList.contains('dark'));
+    });
+  });
+
+  // Sincroniza o switch com o tema já aplicado antes da primeira pintura
+  themeToggleMobile.setAttribute('aria-checked', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+
+  // Menu hamburger (abaixo de md)
+  var menuToggle = document.getElementById('menuToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  var menuIconOpen = menuToggle.querySelector('.menu-icon-open');
+  var menuIconClose = menuToggle.querySelector('.menu-icon-close');
+
+  function setMenu(open) {
+    mobileMenu.classList.toggle('open', open);
+    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    menuIconOpen.classList.toggle('hidden', open);
+    menuIconClose.classList.toggle('hidden', !open);
+  }
+
+  menuToggle.addEventListener('click', function () {
+    setMenu(!mobileMenu.classList.contains('open'));
+  });
+
+  // Fecha ao navegar por um link do menu
+  mobileMenu.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () { setMenu(false); });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setMenu(false);
+  });
+
+  // Fecha ao passar para o breakpoint md, evitando o menu preso aberto
+  window.matchMedia('(min-width: 768px)').addEventListener('change', function (e) {
+    if (e.matches) setMenu(false);
   });
 
   // Contador animado das estatísticas do hero
@@ -478,38 +583,82 @@
   }, { threshold: 0.5 });
   counters.forEach(function (c) { counterObserver.observe(c); });
 
+  // Máscara de celular: (xx) xxxxx-xxxx, aplicada enquanto o usuário digita
+  var celularInput = document.getElementById('celular');
+
+  function apenasDigitos(valor) {
+    var d = valor.replace(/\D/g, '');
+    // Descarta o código do país quando o número é colado como +55 (11) 98765-4321
+    if (d.length > 11 && d.slice(0, 2) === '55') d = d.slice(2);
+    return d.slice(0, 11);
+  }
+
+  function formatarCelular(valor) {
+    var d = apenasDigitos(valor);
+    if (!d) return '';
+    if (d.length <= 2) return '(' + d;
+    if (d.length <= 7) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  }
+
+  celularInput.addEventListener('input', function () {
+    this.value = formatarCelular(this.value);
+  });
+
   // Validação simples do formulário de contato
+  var submitBtn = document.getElementById('submitBtn');
+  var enviando = false;
+
   document.getElementById('leadForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    if (enviando) return;
+
     var nome = document.getElementById('nome').value.trim();
-    var email = document.getElementById('email').value.trim();
+    var celular = apenasDigitos(celularInput.value);
     var perfil = document.getElementById('perfil').value;
     var cidade = document.getElementById('cidade').value.trim();
     var mensagem = document.getElementById('mensagem').value.trim() || '';
     var errorEl = document.getElementById('formError');
-    var successEl = document.getElementById('formSuccess');
-    successEl.classList.add('hidden');
 
-    if (!nome || !email || !perfil || !cidade) {
-      errorEl.textContent = 'Preencha nome, e-mail, perfil e cidade antes de enviar.';
+    if (!nome || !celular || !perfil || !cidade) {
+      errorEl.textContent = 'Preencha nome, celular, perfil e cidade antes de enviar.';
       errorEl.classList.remove('hidden');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errorEl.textContent = 'Digite um e-mail válido.';
+    // DDD de 11 a 99 e nono dígito obrigatório, como nos celulares brasileiros
+    if (!/^[1-9][1-9]9\d{8}$/.test(celular)) {
+      errorEl.textContent = 'Digite um celular válido com DDD.';
       errorEl.classList.remove('hidden');
       return;
     }
     errorEl.classList.add('hidden');
-    await axios.post('https://n8n.andrehonorato.com.br/webhook/175d28d7-dc46-4fc1-a026-6454055dbe3a', {
-      nome,
-      email,
-      perfil,
-      cidade,
-      mensagem
-    })
-    successEl.classList.remove('hidden');
-    this.reset();
+
+    enviando = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    try {
+      await axios.post('https://n8n.andrehonorato.com.br/webhook/175d28d7-dc46-4fc1-a026-6454055dbe3a', {
+        nome,
+        celular,
+        perfil,
+        cidade,
+        mensagem
+      });
+    } catch (err) {
+      // Falha no envio: mantém o formulário preenchido para o usuário tentar de novo
+      enviando = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Quero saber mais';
+      errorEl.textContent = 'Não conseguimos enviar seus dados agora. Tente novamente em instantes.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    // Troca o formulário pelo hero de sucesso, evitando reenvios
+    document.getElementById('formWrap').classList.add('hidden');
+    document.getElementById('successHero').classList.remove('hidden');
+    document.getElementById('cadastro').scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 </script>
 
