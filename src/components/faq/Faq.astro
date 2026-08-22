@@ -1,0 +1,19 @@
+---
+import FaqItem from './FaqItem.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import { duvidas } from '../../data/duvidas';
+---
+
+<section id="faq" class="bg-slate-50 py-20 dark:bg-[#0a0a0a]">
+  <div class="max-w-3xl mx-auto px-6">
+    <SectionHeading
+      titulo="Perguntas frequentes"
+      descricao="O que a maioria pergunta antes de se cadastrar."
+      larguraMaxima="max-w-none"
+    />
+
+    <div class="space-y-3" data-aos="fade-up">
+      {duvidas.map((duvida) => <FaqItem duvida={duvida} />)}
+    </div>
+  </div>
+</section>

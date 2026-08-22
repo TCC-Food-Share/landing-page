@@ -1,0 +1,14 @@
+---
+interface Props {
+  titulo: string;
+  descricao: string;
+  larguraMaxima?: string;
+}
+
+const { titulo, descricao, larguraMaxima = 'max-w-xl' } = Astro.props;
+---
+
+<div class:list={['text-center mx-auto mb-12', larguraMaxima]} data-aos="fade-up">
+  <h2 class="font-display font-bold text-3xl text-slate-900 mb-3 dark:text-[#fafafa]">{titulo}</h2>
+  <p class="text-slate-500 dark:text-[#a3a3a3]">{descricao}</p>
+</div>

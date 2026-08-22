@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/header/Header';
+import Hero from '../components/hero/Hero.astro';
+import Benefits from '../components/benefits/Benefits.astro';
+import HowItWorks from '../components/steps/HowItWorks.astro';
+import Testimonials from '../components/testimonials/Testimonials.astro';
+import Faq from '../components/faq/Faq.astro';
+import FinalCta from '../components/cta/FinalCta.astro';
+import ContactSection from '../components/contact/ContactSection.astro';
+import Footer from '../components/shared/Footer.astro';
+import { linksNavegacao } from '../data/navegacao';
+---
+
+<BaseLayout
+  titulo="Food Share | Conectando quem doa a quem precisa"
+  descricao="O Food Share une estabelecimentos com excedentes de alimentos a entidades beneficiárias, sem custo e sem burocracia."
+>
+  <Header client:load links={linksNavegacao} />
+  <Hero />
+  <Benefits />
+  <HowItWorks />
+  <Testimonials />
+  <Faq />
+  <FinalCta />
+  <ContactSection />
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import StepItem from './StepItem.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import { etapas } from '../../data/etapas';
+---
+
+<section id="como-funciona" class="bg-slate-50 py-20 dark:bg-[#0a0a0a]">
+  <div class="max-w-7xl mx-auto px-6">
+    <SectionHeading
+      titulo="Veja como funciona"
+      descricao="Do cadastro do alimento até a confirmação da retirada, tudo acontece dentro da plataforma."
+    />
+
+    <div class="relative">
+      <div class="hidden md:block absolute left-1/2 top-2 bottom-2 w-px bg-brand-200 -translate-x-1/2 dark:bg-[#262626]"></div>
+
+      <div class="space-y-14 md:space-y-6">
+        {etapas.map((etapa) => <StepItem etapa={etapa} />)}
+      </div>
+    </div>
+  </div>
+</section>

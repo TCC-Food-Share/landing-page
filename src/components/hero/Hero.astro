@@ -1,0 +1,39 @@
+---
+import Blobs from './Blobs.astro';
+import HeroStats from './HeroStats';
+import { estatisticas } from '../../data/estatisticas';
+---
+
+<section id="topo" class="relative overflow-hidden bg-linear-to-br/srgb from-brand-600 to-brand-900">
+  <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
+    <div class="text-center md:text-left" data-aos="fade-up">
+      <span class="inline-block bg-white/10 text-brand-100 text-xs font-medium px-3 py-1 rounded-full mb-5">
+        Plataforma gratuita de doação de alimentos
+      </span>
+      <h1 class="font-display font-extrabold text-4xl md:text-5xl md:leading-none text-white leading-tight mb-5">
+        Conectando quem doa a quem precisa
+      </h1>
+      <p class="text-brand-100 text-lg leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
+        O Food Share une estabelecimentos com excedentes de alimentos a entidades
+        beneficiárias que mais precisam, em poucos cliques, sem custo e sem burocracia.
+      </p>
+      <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-12">
+        <a
+          href="#cadastro"
+          class="bg-white text-brand-800 font-semibold px-6 py-3 rounded-lg hover:bg-brand-50 transition-colors dark:bg-[#fafafa] dark:hover:bg-white"
+        >
+          Cadastre-se gratuitamente
+        </a>
+        <a
+          href="#como-funciona"
+          class="border border-white/30 text-white font-medium px-6 py-3 rounded-lg hover:bg-white/10 transition-colors dark:border-[#ffffff1a]"
+        >
+          Ver como funciona
+        </a>
+      </div>
+      <HeroStats client:visible estatisticas={estatisticas} />
+    </div>
+
+    <Blobs />
+  </div>
+</section>

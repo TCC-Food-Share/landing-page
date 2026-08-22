@@ -1,0 +1,36 @@
+---
+import type { Depoimento } from '../../lib/types';
+
+interface Props {
+  depoimento: Depoimento;
+}
+
+const { depoimento } = Astro.props;
+
+const temas = {
+  brand: 'bg-brand-100 text-brand-700',
+  leaf: 'bg-leaf-50 text-leaf-700',
+};
+---
+
+<blockquote
+  class="bg-slate-50 rounded-2xl p-7 dark:bg-[#1a1a1a] dark:border dark:border-[#262626] hover-lift hover:-translate-y-1.5 hover:shadow-lg dark:hover:shadow-none dark:hover:border-[#3b82f6]/50"
+  data-aos="fade-up"
+  data-aos-delay={depoimento.atraso}
+>
+  <p class="text-slate-700 leading-relaxed mb-5 dark:text-[#a3a3a3]">{depoimento.citacao}</p>
+  <footer class="flex items-center gap-3">
+    <div
+      class:list={[
+        'w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold dark:bg-[#1a2744] dark:text-[#3b82f6]',
+        temas[depoimento.temaAvatar],
+      ]}
+    >
+      {depoimento.iniciais}
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-slate-900 dark:text-[#fafafa]">{depoimento.autor}</p>
+      <p class="text-xs text-slate-500 dark:text-[#a3a3a3]">{depoimento.papel}</p>
+    </div>
+  </footer>
+</blockquote>

@@ -1,0 +1,15 @@
+---
+import BenefitCard from './BenefitCard.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import { beneficios } from '../../data/beneficios';
+---
+
+<section id="beneficios" class="max-w-6xl mx-auto px-6 py-20">
+  <SectionHeading
+    titulo="Por que usar o Food Share"
+    descricao="Pensado para quem não tem tempo nem prática com sistemas complicados."
+  />
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    {beneficios.map((beneficio) => <BenefitCard beneficio={beneficio} />)}
+  </div>
+</section>
