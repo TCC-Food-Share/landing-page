@@ -26,10 +26,24 @@ O prefixo `PUBLIC_` é obrigatório: o envio acontece no navegador, então o val
 | `npm run preview` | Serve o build local |
 | `npm run check` | Type-check dos arquivos `.astro`, `.ts` e `.tsx` |
 
+## SEO
+
+| Arquivo | Papel |
+| --- | --- |
+| `astro.config.mjs` | `site: 'https://foodshare.com.br'` — base das URLs absolutas. Trocar aqui ao mudar de domínio. |
+| `@astrojs/sitemap` | Gera `sitemap-index.xml` + `sitemap-0.xml` em `dist/` a cada `npm run build`. |
+| `public/robots.txt` | Libera o crawl e aponta para `https://foodshare.com.br/sitemap-index.xml`. |
+| `src/layouts/BaseLayout.astro` | `<link rel="canonical">`, Open Graph e Twitter Card, todos derivados de `Astro.site`. |
+
+Ao trocar o domínio, atualize os dois lugares: `site` no `astro.config.mjs` e a linha `Sitemap:` do `public/robots.txt`.
+
+O layout aceita `imagem` opcional para sobrescrever a imagem de compartilhamento (padrão: `/img/logo_foodshare_semfundo.png`).
+
 ## Estrutura
 
 ```
 public/img            imagens servidas estaticamente
+public/robots.txt     regras de crawl + referência ao sitemap
 src/components        componentes por seção (.astro estáticos, .tsx nas ilhas)
 src/data              conteúdo da página (benefícios, etapas, depoimentos, dúvidas)
 src/layouts           shell do HTML, fontes e inicialização do AOS
