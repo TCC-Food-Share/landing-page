@@ -19,13 +19,13 @@ const Icone = icones[beneficio.icone];
 ---
 
 <div
-  class="bg-slate-50 rounded-2xl p-6 dark:bg-[#1a1a1a] dark:border dark:border-[#262626] hover-lift hover:-translate-y-1.5 hover:shadow-lg dark:hover:shadow-none dark:hover:border-[#3b82f6]/50"
+  class="bg-slate-50 rounded-2xl p-5 sm:p-6 min-w-0 dark:bg-[#1a1a1a] dark:border dark:border-[#262626] hover-lift hover:-translate-y-1.5 hover:shadow-lg dark:hover:shadow-none dark:hover:border-[#3b82f6]/50"
   data-aos="fade-up"
   data-aos-delay={beneficio.atraso}
 >
   <div
     class:list={[
-      'w-11 h-11 rounded-full flex items-center justify-center mb-4 dark:bg-[#1a2744] dark:text-[#3b82f6]',
+      'w-11 h-11 shrink-0 rounded-full flex items-center justify-center mb-4 dark:bg-[#1a2744] dark:text-[#3b82f6]',
       temas[beneficio.temaIcone],
     ]}
   >

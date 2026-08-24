@@ -31,10 +31,20 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Compensa o header sticky (h-16) ao navegar pelas âncoras. */
+    scroll-padding-top: 5rem;
+    /* Rede de segurança contra estouro horizontal. `clip` (e não `hidden`)
+       mantém `position: sticky` funcionando no header. */
+    overflow-x: clip;
   }
 
   body {
     font-family: var(--font-body);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
   }
 
   h1,
@@ -116,7 +126,11 @@
   }
 
   .mobile-menu.is-open {
-    max-height: 24rem;
+    /* Folga sobre a altura real do menu e teto pela viewport, para telas
+       baixas (celular em paisagem). */
+    max-height: min(32rem, calc(100dvh - 4rem));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     visibility: visible;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
@@ -158,5 +172,20 @@
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

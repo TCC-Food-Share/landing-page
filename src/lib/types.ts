@@ -27,6 +27,8 @@ export interface Etapa {
   descricao: string;
   imagem: string;
   alt: string;
+  largura: number;
+  altura: number;
   lado: 'esquerda' | 'direita';
 }
 
