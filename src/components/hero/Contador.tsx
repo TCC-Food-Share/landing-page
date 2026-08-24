@@ -15,6 +15,12 @@ export default function Contador({ alvo }: Props) {
     const elemento = referencia.current;
     if (!elemento) return;
 
+    const reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduzirMovimento) {
+      setValor(alvo);
+      return;
+    }
+
     let cancelar: (() => void) | undefined;
 
     const observador = new IntersectionObserver(
@@ -37,7 +43,7 @@ export default function Contador({ alvo }: Props) {
   }, [alvo]);
 
   return (
-    <p ref={referencia} className="font-display font-extrabold text-3xl text-white">
+    <p ref={referencia} className="font-display font-extrabold text-2xl sm:text-3xl text-white">
       {`${valor.toLocaleString('pt-BR')}+`}
     </p>
   );

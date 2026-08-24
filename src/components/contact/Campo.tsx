@@ -10,7 +10,7 @@ interface Props {
 
 export default function Campo({ id, rotulo, larguraTotal = false, children }: Props) {
   return (
-    <div className={larguraTotal ? 'sm:col-span-2' : 'sm:col-span-1'}>
+    <div className={`min-w-0 ${larguraTotal ? 'sm:col-span-2' : 'sm:col-span-1'}`}>
       <label htmlFor={id} className={classeRotulo}>
         {rotulo}
       </label>

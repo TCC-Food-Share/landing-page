@@ -4,12 +4,12 @@ import SectionHeading from '../shared/SectionHeading.astro';
 import { depoimentos } from '../../data/depoimentos';
 ---
 
-<section id="depoimentos" class="max-w-6xl mx-auto px-6 py-20">
+<section id="depoimentos" class="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
   <SectionHeading
     titulo="Quem já usa"
     descricao="Estabelecimentos e entidades que já usam o Food Share no dia a dia."
   />
-  <div class="grid md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     {depoimentos.map((depoimento) => <TestimonialCard depoimento={depoimento} />)}
   </div>
 </section>

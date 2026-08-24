@@ -10,7 +10,7 @@ export default function ThemeSwitchRow({ escuro, onAlternar }: Props) {
       role="switch"
       aria-checked={escuro}
       onClick={onAlternar}
-      className="sm:hidden flex items-center justify-between gap-3 py-2.5"
+      className="sm:hidden flex items-center justify-between min-h-11 gap-3"
     >
       <span className="flex items-center gap-2">Modo escuro</span>
       <span className="relative w-10 h-6 rounded-full bg-slate-200 transition-colors dark:bg-[#1d4ed8]">

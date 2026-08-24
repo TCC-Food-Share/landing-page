@@ -55,7 +55,12 @@ const imagemAbsoluta = new URL(imagem, Astro.site);
     <script>
       import AOS from 'aos';
 
-      AOS.init({ duration: 700, easing: 'ease-out-quart', once: true });
+      AOS.init({
+        duration: 700,
+        easing: 'ease-out-quart',
+        once: true,
+        disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      });
     </script>
   </body>
 </html>

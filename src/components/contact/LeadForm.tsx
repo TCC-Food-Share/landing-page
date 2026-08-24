@@ -59,8 +59,8 @@ export default function LeadForm() {
 
   return (
     <>
-      <div className="text-center mb-10">
-        <h2 className="font-display font-bold text-3xl text-slate-900 mb-3 dark:text-[#fafafa]">
+      <div className="text-center mb-8 sm:mb-10">
+        <h2 className="font-display font-bold text-2xl sm:text-3xl text-slate-900 mb-3 dark:text-[#fafafa]">
           Fale com a gente
         </h2>
         <p className="text-slate-500 dark:text-[#a3a3a3]">
@@ -68,7 +68,7 @@ export default function LeadForm() {
         </p>
       </div>
 
-      <form className="grid sm:grid-cols-2 gap-5" onSubmit={aoEnviar} noValidate>
+      <form className="grid grid-cols-1 sm:grid-cols-2 gap-5" onSubmit={aoEnviar} noValidate>
         <Campo id="nome" rotulo="Nome">
           <input
             id="nome"
