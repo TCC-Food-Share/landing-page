@@ -142,10 +142,6 @@
   .dark .mobile-menu.is-open {
     box-shadow: none;
   }
-
-  .success-check {
-    animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
 }
 
 @keyframes floatA {
@@ -168,16 +164,6 @@
   }
 }
 
-@keyframes popIn {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   html {

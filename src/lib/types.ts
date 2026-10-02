@@ -1,13 +1,3 @@
-export type PerfilLead = 'estabelecimento' | 'entidade';
-
-export interface Lead {
-  nome: string;
-  celular: string;
-  perfil: PerfilLead | '';
-  cidade: string;
-  mensagem: string;
-}
-
 export interface LinkNavegacao {
   href: string;
   rotulo: string;
