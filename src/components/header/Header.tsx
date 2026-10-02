@@ -5,6 +5,7 @@ import DesktopNav from './DesktopNav';
 import MobileMenu from './MobileMenu';
 import ThemeToggleButton from './ThemeToggleButton';
 import { alternarTema, temaEscuroAtivo } from '../../lib/theme';
+import { urlCadastro, urlLogin } from '../../data/app';
 import type { LinkNavegacao } from '../../lib/types';
 
 interface Props {
@@ -53,14 +54,14 @@ export default function Header({ links }: Props) {
           <ThemeToggleButton onAlternar={aoAlternarTema} />
 
           <a
-            href="#"
+            href={urlLogin}
             className="border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors dark:border-[#ffffff1a] text-sm text-slate-600 dark:text-[#a3a3a3] dark:hover:bg-[#1a1a1a]"
           >
             Entrar
           </a>
 
           <a
-            href="#cadastro"
+            href={urlCadastro}
             className="hidden md:inline-block bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]"
           >
             Cadastre-se

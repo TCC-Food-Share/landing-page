@@ -12,9 +12,11 @@ Copie `.env.example` para `.env` e preencha:
 
 | Variável | Descrição |
 | --- | --- |
-| `PUBLIC_LEAD_WEBHOOK_URL` | Endpoint que recebe o POST do formulário de contato. |
+| `PUBLIC_APP_URL` | URL do sistema, base dos botões Entrar e Cadastre-se. Opcional, padrão `https://app.foodshare.com.br`. |
 
-O prefixo `PUBLIC_` é obrigatório: o envio acontece no navegador, então o valor é embutido no bundle durante o build.
+O prefixo `PUBLIC_` é obrigatório: o valor é embutido no HTML durante o build.
+
+As URLs do app ficam em `src/data/app.ts`. Os cards de perfil do CTA final enviam `?profile=establishment` ou `?profile=beneficiary` para `/cadastro`.
 
 ## Comandos
 
@@ -47,19 +49,18 @@ public/robots.txt     regras de crawl + referência ao sitemap
 src/components        componentes por seção (.astro estáticos, .tsx nas ilhas)
 src/data              conteúdo da página (benefícios, etapas, depoimentos, dúvidas)
 src/layouts           shell do HTML, fontes e inicialização do AOS
-src/lib               máscara de celular, validação, envio do lead, tema, tipos
+src/lib               tema, contador, tipos
 src/pages/index.astro composição da página
 src/styles/global.css tema do Tailwind e estilos próprios
 ```
 
 ## Ilhas React
 
-Só três trechos enviam JavaScript ao navegador:
+Só dois trechos enviam JavaScript ao navegador:
 
 | Ilha | Diretiva | Motivo |
 | --- | --- | --- |
 | `components/header/Header.tsx` | `client:load` | Menu hamburger e troca de tema precisam responder de imediato |
 | `components/hero/HeroStats.tsx` | `client:visible` | Contadores animam quando entram na tela |
-| `components/contact/LeadForm.tsx` | `client:visible` | Formulário, máscara, validação e envio |
 
 O resto da página é HTML estático, incluindo os ícones do lucide, renderizados em tempo de build.

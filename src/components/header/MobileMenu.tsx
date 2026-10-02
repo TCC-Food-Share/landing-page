@@ -1,4 +1,5 @@
 import ThemeSwitchRow from './ThemeSwitchRow';
+import { urlCadastro } from '../../data/app';
 import type { LinkNavegacao } from '../../lib/types';
 
 interface Props {
@@ -27,7 +28,7 @@ export default function MobileMenu({ aberto, links, escuro, onAlternarTema, onNa
         <ThemeSwitchRow escuro={escuro} onAlternar={onAlternarTema} />
 
         <a
-          href="#cadastro"
+          href={urlCadastro}
           onClick={onNavegar}
           className="mt-3 mb-1 flex items-center justify-center min-h-11 bg-brand-600 hover:bg-brand-700 text-white text-center font-medium px-4 rounded-lg transition-colors dark:bg-[#1d4ed8] dark:hover:bg-[#1a3fb8]"
         >
