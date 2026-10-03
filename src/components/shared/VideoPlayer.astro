@@ -1,0 +1,294 @@
+---
+import { Maximize, Minimize, Pause, Play, Volume2, VolumeX } from 'lucide-react';
+
+interface Props {
+  src: string;
+  poster: string;
+  titulo: string;
+  descricao: string;
+  duracaoSegundos: number;
+  /** Data de publicação (AAAA-MM-DD), usada no JSON-LD. */
+  dataPublicacao: string;
+}
+
+const { src, poster, titulo, descricao, duracaoSegundos, dataPublicacao } = Astro.props;
+
+const minutos = Math.floor(duracaoSegundos / 60);
+const segundos = Math.floor(duracaoSegundos % 60);
+const duracaoFormatada = `${minutos}:${String(segundos).padStart(2, '0')}`;
+
+// Dados estruturados para o Google exibir o vídeo nos resultados de busca.
+const videoObject = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: titulo,
+  description: descricao,
+  thumbnailUrl: new URL(poster, Astro.site).href,
+  contentUrl: new URL(src, Astro.site).href,
+  uploadDate: dataPublicacao,
+  duration: `PT${minutos}M${segundos}S`,
+  inLanguage: 'pt-BR',
+};
+
+const botaoIcone =
+  'w-9 h-9 shrink-0 rounded-full flex items-center justify-center transition-colors hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white';
+---
+
+<div
+  data-video-player
+  class="video-player group relative overflow-hidden rounded-xl border border-slate-200 shadow-xs bg-white dark:border-[#262626]"
+>
+  <!-- `controls` nativo fica como fallback caso o JS não carregue; o script o remove. -->
+  <video
+    controls
+    preload="metadata"
+    playsinline
+    width="1920"
+    height="1080"
+    poster={poster}
+    aria-label={titulo}
+    class="block w-full h-auto"
+  >
+    <source src={src} type="video/mp4" />
+  </video>
+
+  <div data-controles hidden>
+    <div data-superficie class="absolute inset-0 cursor-pointer"></div>
+
+    <!-- Fica no canto para não cobrir o texto centralizado do poster; some após o primeiro play. -->
+    <button
+      type="button"
+      data-iniciar
+      aria-label={`Assistir vídeo (${duracaoFormatada})`}
+      class="absolute left-3 bottom-3 sm:left-5 sm:bottom-5 flex items-center gap-3 rounded-full bg-brand-600 text-white p-1.5 sm:pr-5 shadow-lg ring-4 ring-brand-600/20 transition-all duration-300 hover:scale-105 hover:bg-brand-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600 dark:bg-[#1d4ed8] dark:ring-[#1d4ed8]/25 group-data-[iniciado]:invisible group-data-[iniciado]:opacity-0"
+    >
+      <span class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center">
+        <Play className="w-4 h-4 sm:w-5 sm:h-5 translate-x-px" fill="currentColor" />
+      </span>
+      <span class="hidden sm:inline font-display font-semibold text-sm">Assistir vídeo</span>
+      <span class="hidden sm:inline text-sm tabular-nums text-white/70">{duracaoFormatada}</span>
+    </button>
+
+    <div
+      data-barra-controles
+      class="absolute inset-x-0 bottom-0 flex items-center gap-1.5 sm:gap-3 px-2 sm:px-4 pt-10 pb-2 sm:pb-3 bg-linear-to-t from-black/70 via-black/30 to-transparent text-white transition-opacity duration-300 invisible opacity-0 group-data-[iniciado]:visible group-data-[barra]:opacity-100"
+    >
+      <button type="button" data-alternar aria-label="Reproduzir vídeo" class={botaoIcone}>
+        <Play className="w-5 h-5 group-data-[reproduzindo]:hidden" fill="currentColor" />
+        <Pause className="hidden w-5 h-5 group-data-[reproduzindo]:block" fill="currentColor" />
+      </button>
+
+      <span data-tempo-atual class="text-xs sm:text-sm font-medium tabular-nums">0:00</span>
+
+      <input
+        type="range"
+        data-progresso
+        min="0"
+        max="0"
+        step="any"
+        value="0"
+        aria-label="Progresso do vídeo"
+        class="barra-progresso flex-1 min-w-0"
+      />
+
+      <span data-tempo-total class="text-xs sm:text-sm font-medium tabular-nums text-white/80">{duracaoFormatada}</span>
+
+      <button type="button" data-mudo aria-label="Desativar som" class={botaoIcone}>
+        <Volume2 className="w-5 h-5 group-data-[mudo]:hidden" />
+        <VolumeX className="hidden w-5 h-5 group-data-[mudo]:block" />
+      </button>
+
+      <button type="button" data-tela-cheia aria-label="Tela cheia" class={botaoIcone}>
+        <Maximize className="w-5 h-5 group-data-[tela-cheia]:hidden" />
+        <Minimize className="hidden w-5 h-5 group-data-[tela-cheia]:block" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(videoObject)} />
+
+<style>
+  .video-player[data-reproduzindo]:not([data-barra]) {
+    cursor: none;
+  }
+
+  .video-player:fullscreen {
+    display: flex;
+    align-items: center;
+    border: 0;
+    border-radius: 0;
+    background: #000;
+  }
+
+  .video-player:fullscreen video {
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .barra-progresso {
+    appearance: none;
+    height: 4px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      var(--color-brand-400) var(--progresso, 0%),
+      rgb(255 255 255 / 0.35) var(--progresso, 0%)
+    );
+    cursor: pointer;
+    transition: height 150ms;
+  }
+
+  .barra-progresso:hover,
+  .barra-progresso:focus-visible {
+    height: 6px;
+  }
+
+  .barra-progresso:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+  }
+
+  .barra-progresso::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  }
+
+  .barra-progresso::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  }
+</style>
+
+<script>
+  interface VideoIOS extends HTMLVideoElement {
+    webkitEnterFullscreen?: () => void;
+  }
+
+  const TEMPO_OCIOSO_MS = 2500;
+
+  const formatarTempo = (segundos: number) => {
+    if (!Number.isFinite(segundos)) return '0:00';
+    const min = Math.floor(segundos / 60);
+    const seg = Math.floor(segundos % 60).toString().padStart(2, '0');
+    return `${min}:${seg}`;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-video-player]').forEach((player) => {
+    const video = player.querySelector('video') as VideoIOS;
+    const controles = player.querySelector<HTMLElement>('[data-controles]')!;
+    const superficie = player.querySelector<HTMLElement>('[data-superficie]')!;
+    const botaoIniciar = player.querySelector<HTMLButtonElement>('[data-iniciar]')!;
+    const botaoAlternar = player.querySelector<HTMLButtonElement>('[data-alternar]')!;
+    const progresso = player.querySelector<HTMLInputElement>('[data-progresso]')!;
+    const tempoAtual = player.querySelector<HTMLElement>('[data-tempo-atual]')!;
+    const tempoTotal = player.querySelector<HTMLElement>('[data-tempo-total]')!;
+    const botaoMudo = player.querySelector<HTMLButtonElement>('[data-mudo]')!;
+    const botaoTelaCheia = player.querySelector<HTMLButtonElement>('[data-tela-cheia]')!;
+
+    video.controls = false;
+    controles.hidden = false;
+
+    let timerOcioso: number | undefined;
+
+    const esconderBarra = () => {
+      if (video.paused || player.querySelector(':focus-visible')) return;
+      delete player.dataset.barra;
+    };
+
+    const mostrarBarra = () => {
+      player.dataset.barra = '';
+      window.clearTimeout(timerOcioso);
+      timerOcioso = window.setTimeout(esconderBarra, TEMPO_OCIOSO_MS);
+    };
+
+    const alternar = () => {
+      if (video.paused) void video.play();
+      else video.pause();
+    };
+
+    const atualizarProgresso = () => {
+      const porcentagem = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      progresso.value = String(video.currentTime);
+      progresso.style.setProperty('--progresso', `${porcentagem}%`);
+      progresso.setAttribute('aria-valuetext', `${formatarTempo(video.currentTime)} de ${formatarTempo(video.duration)}`);
+      tempoAtual.textContent = formatarTempo(video.currentTime);
+    };
+
+    const carregarDuracao = () => {
+      progresso.max = String(video.duration);
+      tempoTotal.textContent = formatarTempo(video.duration);
+    };
+
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) carregarDuracao();
+    video.addEventListener('loadedmetadata', carregarDuracao);
+    video.addEventListener('timeupdate', atualizarProgresso);
+
+    video.addEventListener('play', () => {
+      player.dataset.reproduzindo = '';
+      player.dataset.iniciado = '';
+      botaoAlternar.setAttribute('aria-label', 'Pausar vídeo');
+      // Mantém o foco do teclado dentro do player depois que o botão inicial some.
+      if (document.activeElement === botaoIniciar) botaoAlternar.focus();
+      mostrarBarra();
+    });
+
+    video.addEventListener('pause', () => {
+      delete player.dataset.reproduzindo;
+      botaoAlternar.setAttribute('aria-label', 'Reproduzir vídeo');
+      mostrarBarra();
+    });
+
+    video.addEventListener('volumechange', () => {
+      if (video.muted) player.dataset.mudo = '';
+      else delete player.dataset.mudo;
+      botaoMudo.setAttribute('aria-label', video.muted ? 'Ativar som' : 'Desativar som');
+    });
+
+    superficie.addEventListener('click', alternar);
+    botaoIniciar.addEventListener('click', alternar);
+    botaoAlternar.addEventListener('click', alternar);
+
+    progresso.addEventListener('input', () => {
+      video.currentTime = Number(progresso.value);
+      atualizarProgresso();
+    });
+
+    botaoMudo.addEventListener('click', () => {
+      video.muted = !video.muted;
+    });
+
+    player.addEventListener('pointermove', mostrarBarra);
+    player.addEventListener('focusin', mostrarBarra);
+    player.addEventListener('pointerleave', () => {
+      window.clearTimeout(timerOcioso);
+      esconderBarra();
+    });
+
+    // iOS Safari não suporta fullscreen em elementos arbitrários, só no <video>.
+    if (player.requestFullscreen) {
+      botaoTelaCheia.addEventListener('click', () => {
+        if (document.fullscreenElement) void document.exitFullscreen();
+        else void player.requestFullscreen();
+      });
+      document.addEventListener('fullscreenchange', () => {
+        const ativo = document.fullscreenElement === player;
+        if (ativo) player.dataset.telaCheia = '';
+        else delete player.dataset.telaCheia;
+        botaoTelaCheia.setAttribute('aria-label', ativo ? 'Sair da tela cheia' : 'Tela cheia');
+      });
+    } else if (video.webkitEnterFullscreen) {
+      botaoTelaCheia.addEventListener('click', () => video.webkitEnterFullscreen?.());
+    } else {
+      botaoTelaCheia.remove();
+    }
+  });
+</script>

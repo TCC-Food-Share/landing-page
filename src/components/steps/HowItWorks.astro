@@ -1,6 +1,7 @@
 ---
 import StepItem from './StepItem.astro';
 import SectionHeading from '../shared/SectionHeading.astro';
+import VideoPlayer from '../shared/VideoPlayer.astro';
 import { etapas } from '../../data/etapas';
 ---
 
@@ -10,6 +11,17 @@ import { etapas } from '../../data/etapas';
       titulo="Veja como funciona"
       descricao="Do cadastro do alimento até a confirmação da retirada, tudo acontece dentro da plataforma."
     />
+
+    <div class="max-w-4xl mx-auto mb-14 sm:mb-20" data-aos="fade-up">
+      <VideoPlayer
+        src="/videos/como-funciona.mp4"
+        poster="/videos/como-funciona-poster.webp"
+        titulo="Como funciona o Food Share"
+        descricao="Demonstração de como estabelecimentos publicam excedentes de alimentos e entidades beneficiárias solicitam e confirmam a retirada pelo Food Share."
+        duracaoSegundos={60}
+        dataPublicacao="2026-10-02"
+      />
+    </div>
 
     <div class="relative">
       <div class="hidden md:block absolute left-1/2 top-2 bottom-2 w-px bg-brand-200 -translate-x-1/2 dark:bg-[#262626]"></div>
