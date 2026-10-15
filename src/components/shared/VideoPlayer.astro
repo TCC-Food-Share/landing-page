@@ -7,7 +7,7 @@ interface Props {
   titulo: string;
   descricao: string;
   duracaoSegundos: number;
-  /** Data de publicação (AAAA-MM-DD), usada no JSON-LD. */
+  /** Data de publicação (AAAA-MM-DD), usada no JSON-LD com horário de Brasília. */
   dataPublicacao: string;
 }
 
@@ -25,7 +25,8 @@ const videoObject = {
   description: descricao,
   thumbnailUrl: new URL(poster, Astro.site).href,
   contentUrl: new URL(src, Astro.site).href,
-  uploadDate: dataPublicacao,
+  // O Google exige data e hora com fuso (ISO 8601), não só a data.
+  uploadDate: `${dataPublicacao}T00:00:00-03:00`,
   duration: `PT${minutos}M${segundos}S`,
   inLanguage: 'pt-BR',
 };
@@ -97,6 +98,19 @@ const botaoIcone =
         <Volume2 className="w-5 h-5 group-data-[mudo]:hidden" />
         <VolumeX className="hidden w-5 h-5 group-data-[mudo]:block" />
       </button>
+
+      <!-- Escondido no mobile: iOS ignora `video.volume` e o volume fica nos botões do aparelho. -->
+      <input
+        type="range"
+        data-volume
+        min="0"
+        max="1"
+        step="0.05"
+        value="0.25"
+        aria-label="Volume"
+        class="barra-progresso hidden sm:block w-16 md:w-20 shrink-0"
+        style="--progresso: 25%"
+      />
 
       <button type="button" data-tela-cheia aria-label="Tela cheia" class={botaoIcone}>
         <Maximize className="w-5 h-5 group-data-[tela-cheia]:hidden" />
@@ -174,6 +188,7 @@ const botaoIcone =
   }
 
   const TEMPO_OCIOSO_MS = 2500;
+  const VOLUME_INICIAL = 0.25;
 
   const formatarTempo = (segundos: number) => {
     if (!Number.isFinite(segundos)) return '0:00';
@@ -192,9 +207,11 @@ const botaoIcone =
     const tempoAtual = player.querySelector<HTMLElement>('[data-tempo-atual]')!;
     const tempoTotal = player.querySelector<HTMLElement>('[data-tempo-total]')!;
     const botaoMudo = player.querySelector<HTMLButtonElement>('[data-mudo]')!;
+    const volume = player.querySelector<HTMLInputElement>('[data-volume]')!;
     const botaoTelaCheia = player.querySelector<HTMLButtonElement>('[data-tela-cheia]')!;
 
     video.controls = false;
+    video.volume = VOLUME_INICIAL;
     controles.hidden = false;
 
     let timerOcioso: number | undefined;
@@ -251,6 +268,10 @@ const botaoIcone =
       if (video.muted) player.dataset.mudo = '';
       else delete player.dataset.mudo;
       botaoMudo.setAttribute('aria-label', video.muted ? 'Ativar som' : 'Desativar som');
+      const nivel = video.muted ? 0 : video.volume;
+      volume.value = String(nivel);
+      volume.style.setProperty('--progresso', `${nivel * 100}%`);
+      volume.setAttribute('aria-valuetext', `${Math.round(nivel * 100)}%`);
     });
 
     superficie.addEventListener('click', alternar);
@@ -263,7 +284,14 @@ const botaoIcone =
     });
 
     botaoMudo.addEventListener('click', () => {
+      // Desmutar com o volume zerado não teria efeito audível.
+      if (video.muted && video.volume === 0) video.volume = VOLUME_INICIAL;
       video.muted = !video.muted;
+    });
+
+    volume.addEventListener('input', () => {
+      video.volume = Number(volume.value);
+      video.muted = video.volume === 0;
     });
 
     player.addEventListener('pointermove', mostrarBarra);
